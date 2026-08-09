@@ -1,0 +1,20 @@
+[project]
+name = "right-structure"
+version = "0.1.0"
+description = "Picking the structure the business is asking for"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "mypy>=1.9",
+]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "tools"]
+testpaths = ["tests"]
+
+[tool.mypy]
+files = ["src"]
+strict = true
