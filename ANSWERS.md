@@ -8,19 +8,28 @@ How many comparisons would a single `serve` perform if `prepare` handed it the r
 untouched?
 
 - My prediction: 
+
                 About 200,000 comparisons, because serve would need to scan all 200,000 trips and compare each trip’s station with 
                 the requested station.
+
 - What the test reported: 
+
                 The test passed and the number of comparisons was within the required limit.
+
 - Why the difference (if any):
+
                 Because prepare counts the trips for each station in advance, serve can get the result directly without going through all the trips again.
                 
 ## Round 2 — the cost of the second question
 
-Name the cost you took on in this round that Round 1 did not have.
+Name the cost you took on in this round that Round 1 did not have:
+
+                Round 2 uses more memory because we keep an additional dictionary with a lookup entry for every trip.
 
 A colleague proposes that `prepare` should build only what the support desk needs, and that the
 dashboard's answer be recomputed on demand. Under what mix of the two question kinds is she right?
+
+                The colleague is right if ByStation queries are very rare compared to ByReceipt queries. In that case, it may be better to calculate the station count only when it is needed instead of storing it in advance.
 
 ## Round 4 — what `prepare` now costs
 
