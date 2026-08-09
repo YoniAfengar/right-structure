@@ -7,10 +7,14 @@ Fill this in as you go. It is checked, and it is where the actual understanding 
 How many comparisons would a single `serve` perform if `prepare` handed it the raw list of trips
 untouched?
 
-- My prediction:
-- What the test reported:
+- My prediction: 
+                About 200,000 comparisons, because serve would need to scan all 200,000 trips and compare each trip’s station with 
+                the requested station.
+- What the test reported: 
+                The test passed and the number of comparisons was within the required limit.
 - Why the difference (if any):
-
+                Because prepare counts the trips for each station in advance, serve can get the result directly without going through all the trips again.
+                
 ## Round 2 — the cost of the second question
 
 Name the cost you took on in this round that Round 1 did not have.
