@@ -43,18 +43,23 @@ prepare now costs O(n log n) because it sorts all trips by start time before bui
 
 | round | `Round<N>Prepared` | the one property of the demand that forced it |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| 1 | `dict[Station, int]` | We needed repeated trip-count queries by station without scanning all trips every time, so we counted them once in `prepare()` and used direct lookups in `serve()`. |
+| 2 | `tuple[dict[Station, int], dict[tuple[Station, TripId], Trip]]` | We needed to keep the station-count query while also supporting direct lookup of a specific trip by `(Station, TripId)`, so we prepared both indexes in advance. |
+| 3 | `dict[Station, Distance]` | We needed the top `k` stations by total distance without sorting every station for each query, so we prepared the total distance per station and used a min-heap in `serve()` to keep only the top `k`. |
+| 4 | `tuple[list[Timestamp], list[Distance]]` | We needed the total distance for trips in a time range without scanning all trips for every query, so we prepared sorted timestamps for fast boundary searches and prefix sums for constant-time range totals. |
+| 5 | `tuple[str, int]` | The data was a tree of unknown depth, and a region's size depended on all files below it, so we recursively calculated each top-level region's total size and prepared only the largest region's name and size. |
+
 
 ### (a) Round 4 vs a balanced binary search tree
 
 Describe the one change to Round 4's workload that flips the answer, and say precisely what Round 4's
 structure would then have to pay.
 
+If new trips were inserted continuously, Round 4's structure would become expensive to maintain. A new trip may need to be inserted in the middle of the sorted timestamps, which requires shifting later elements and updating all prefix sums after that position. This can make each insertion O(n), and we would pay that cost repeatedly as new trips arrive. A balanced search tree is a better fit when the workload includes frequent inserts as well as range queries.
+
 ### (b) The refactor that did not happen
 
 Describe what you would have had to change in a codebase where the prepared structure was passed
 around directly and every caller reached into it in-line.
+
+If the prepared structure had been passed around directly, changing it in Round 2 would have required finding and updating every caller that accessed the old dictionary structure. Each caller would need to know about the new tuple and how to reach the correct dictionary inside it. By hiding the structure behind the `Round<N>Prepared` TypeAlias, `prepare()`, and `serve()`, the change stayed local instead of causing a refactor across the whole codebase.
