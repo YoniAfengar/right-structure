@@ -36,6 +36,9 @@ dashboard's answer be recomputed on demand. Under what mix of the two question k
 `prepare` costs more than it did in Round 1. Say what it costs, and why the trade is worth it here and
 not there.
 
+prepare now costs O(n log n) because it sorts all trips by start time before building the timestamp and prefix-sum lists. The extra cost is worth it because every range query can then find its boundaries in O(log n) and calculate the total distance in O(1). In Round 1, sorting would not help because a dictionary already gives direct O(1) station lookups.
+
+
 ## Round 6 — the five decisions
 
 | round | `Round<N>Prepared` | the one property of the demand that forced it |

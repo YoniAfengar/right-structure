@@ -1,7 +1,7 @@
 """Round 3 — the k busiest stations, live on the wall display."""
 from __future__ import annotations
 
-from typing import Any, Sequence, TypeAlias
+from typing import Sequence, TypeAlias
 
 from given.probe import Distance, Station, Trip
 from given.round import check_round
